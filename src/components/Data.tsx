@@ -3,7 +3,11 @@ import { fetchUsers } from "../API/api";
 import { useQuery } from "react-query";
 export const Data = () => {
   // Auto-generated hook by createApi to fetch and select data
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: userData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["users"], // The query key uniquely identifies this query.
     queryFn: fetchUsers, // The function to fetch the data.
     // Automatically refetch the data every 2 minutes
@@ -15,12 +19,11 @@ export const Data = () => {
   if (isLoading) return <h1>Loading...</h1>;
   // Display an error message if the request failed
   if (isError) return <div>Error loading User Data</div>;
-  console.log("data", data);
-
+  const userList = Array.isArray(userData) ? userData : [];
   return (
     <div style={{ padding: "10px" }}>
       <h2>User Information</h2>
-      <h3>Total Users: {data?.total}</h3>
+      <h3>Total Users: {userData?.total}</h3>
       <table
         style={{
           width: "90%",
@@ -32,6 +35,9 @@ export const Data = () => {
       >
         <thead>
           <tr style={{ backgroundColor: "#f2f2f2" }}>
+          <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+              ID
+            </th>
             <th style={{ border: "1px solid #ddd", padding: "8px" }}>
               First Name
             </th>
@@ -43,22 +49,26 @@ export const Data = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.users?.map((user: any) => (
-            <tr key={user.id}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {user.firstName}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {user.lastName}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {user.email}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {user.phone}
-              </td>
-            </tr>
-          ))}
+          {!isLoading &&
+            userList?.map((user: any) => (
+              <tr key={user.id}>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {user.id}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {user.firstName}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {user.lastName}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {user.email}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {user.phoneNumber}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
